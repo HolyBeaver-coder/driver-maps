@@ -1,0 +1,97 @@
+;
+; Rockfire HID (!) Device Information File
+;
+; edit by Bill Tu
+; 
+; This version is only support vibrat controller
+; 
+; Copyright (c) 2004 Padix, Taiwan, R.O.C.
+
+
+[Version]
+CatalogFile                      = hiddev.cat
+LayoutFile                       = Layout.inf, Layout1.inf, Layout2.inf
+Signature                        = "$CHICAGO$"
+Class                            = HID
+ClassGUID                        = {745a17a0-74d3-11d0-b6fe-00a0c90f57da}
+Provider                         = "Padix, Taiwan, R.O.C."
+SetupClass                       = Base
+
+[BaseWinOptions]
+Inst_Hiddev
+
+[Inst_Hiddev]
+Copyfiles                        = Hid.Inf.Copy
+
+[Hid.Inf.Copy]
+;joystick.inf
+
+[DestinationDirs]
+DefaultDestDir                   = 11             ; LDID_SYS, the Windows\System directory
+HidClassCopy                     = 11
+HidClassDel                      = 25
+Hid.Inf.Copy                     = 17             ; LDID_INF, the Windows\Inf directory
+USBHIDDevice.Copy                = 10,system32\drivers
+USBHIDDevice.Del                 = 11
+HIDSystemControl.Copy            = 11
+MMHID.Copy                       = 11
+MMHID.Del                        = 25
+
+[ClassInstall]
+AddReg                           = HIDClassReg
+CopyFiles                        = HidClassCopy
+DelFiles                         = HidClassDel
+
+[HIDClassReg]
+HKR,,,0,%HIDClassDescription%
+HKR,,Icon,,-24
+HKR,,Installer,,hidci.dll  ; the class installer forces RunOnce entries
+                           ; to be executed for all hid device installs
+
+[HidClassCopy]
+hidci.dll
+
+[HidClassDel]
+hidci.dll
+
+[Manufacturer]
+%Rockfire.Mfg%                   = Rockfire.Section
+
+[Rockfire.Section]
+
+%USB\VID_0583&PID_5308.DeviceDesc%=5308.Section,USB\VID_0583&PID_5308&REV_0120
+%USB\VID_0583&PID_5308.DeviceDesc%=5308.Section,USB\VID_0583&PID_5308&REV_0100
+%USB\VID_0583&PID_5308.DeviceDesc%=5308.Section,USB\VID_0583&PID_5308
+
+[5308.Section]
+CopyFiles=Hid.Inf.Copy,USBHIDDevice.Copy
+DelFiles=USBHIDDevice.Del
+AddReg=5308.AddReg
+KnownFiles=USBHIDDevice.KnownFiles
+
+[USBHIDDevice.Copy]
+hidclass.sys
+hidusb.sys
+hidparse.sys
+
+[USBHIDDevice.Del]
+hidclass.sys
+hidusb.sys
+hidparse.sys
+
+[USBHIDDevice.KnownFiles]
+hidclass.sys
+hidusb.sys
+hidparse.sys
+
+[5308.AddReg]
+HKR,,DevLoader,,*ntkern
+HKR,,DriverDesc,,%USB\VID_0583&PID_5308.DeviceDesc%
+HKR,,MatchingDeviceId,,USB\VID_0583&PID_5308&REV_0100,USB\VID_0583&PID_5308
+HKR,,NTMPDriver,,"hidusb.sys"
+
+
+[Strings]
+HIDClassDescription              = "Human Interface Devices"
+Rockfire.Mfg                     = "Rockfire"
+USB\VID_0583&PID_5308.DeviceDesc = "USB WirlessVibrationPad"
