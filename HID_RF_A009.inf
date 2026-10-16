@@ -1,173 +1,88 @@
+;
+; RF_A009.inf : Windows 98/me Style INF file
+;
+; Copyright Ruling Technologies, Singapore
+; for Padix, Co. Ltd. Taiwan
+;
+
 [Version]
-Signature="$WINDOWS NT$"
-Class=HIDClass
-ClassGuid={745a17a0-74d3-11d0-b6fe-00a0c90f57da}
-Provider=%Provider%
-DriverVer=03/17/2007,6.0.5736.5
-CatalogFile=HID_RF_A009.cat
+CatalogFile=joystick.cat
+layoutfile=layout.inf,layout1.inf,layout2.inf
+Signature="$CHICAGO$"
+Class=MEDIA
+ClassGUID={4d36e96c-e325-11ce-bfc1-08002be10318}
+provider=%Provider%
 
-; RF_A009.inf : Windows 2k/XP/Vista32/Vista64 Style INF file
-;
-; Copyright Padix, Co. Ltd. Taiwan
-;
-; ================= Class section =====================
+[ClassInstall]
+Addreg=Class.AddReg
 
-[ControlFlags]
-ExcludeFromSelect = *
+[Class.AddReg]
+HKR,,,,%MediaClassName%
+HKR,,Icon,,"-1"
+HKR,,Installer,,mmci.dll
 
 [Manufacturer]
-%Rockfire.Mfg%=RockFire,NT,NTamd64
+%Rockfire.Mfg%=RockFire.Section
 
-[RockFire.NT]
-%HID\VID_0583&PID_A009.DeviceDesc%=A009.NT,HID\VID_0583&PID_A009
+[RockFire.Section]
 
-[RockFire.NTamd64]
-%HID\VID_0583&PID_A009.DeviceDesc%=A009.NTamd64,HID\VID_0583&PID_A009
+%USB\VID_0583&PID_A009.DeviceDesc%=A009.Section,HID\VID_0583&PID_A009&REV_0120
+%USB\VID_0583&PID_A009.DeviceDesc%=A009.Section,HID\VID_0583&PID_A009&REV_0100
+%USB\VID_0583&PID_A009.DeviceDesc%=A009.Section,HID\VID_0583&PID_A009
+
 
 [DestinationDirs]
-Driver_copyfiles = 11
-Dyncal_copyfiles = 12
-Dyncal64_copyfiles = 12
+MSJSTICK.CopyList = 11          ; LDID_SYS
+RF_USBJSTICK.CopyFiles = 11	; LDID_SYS
+RF_USBJSTICK.DelFiles = 11	; LDID_SYS
 
-[SourceDisksNames]
-1 = %Disk_Desc%,,,
+[A009.Section]
+CopyFiles=RF_USBJSTICK.CopyFiles,MSJSTICK.CopyList
+DelFiles=RF_USBJSTICK.DelFiles
+AddReg=A009.AddReg
+UpdateInis=MSJSTICK.UpdateInis
+KnownFiles=RF_USBJSTICK.KnownFiles,MSJSTICK.KnownFiles
 
-[SourceDisksFiles]
-dyncal64.sys=1
-rfvibra64.dll=1
-rfvibra264.dll=1
-rfcplsvr64.dll=1
-dyncal.sys=1
-rfvibra.dll=1
-rfvibra2.dll=1
-rfcplsvr.dll=1
+[A009.Section.HW]
+AddReg=HIDDynCal.AddReg.HW
 
-[Dyncal_copyfiles]
-dyncal.sys
 
-[Driver_copyfiles]
-rfvibra.dll
-rfvibra2.dll
-rfcplsvr.dll
+[HIDDynCal.AddReg.HW]
+HKR,,LowerFilters,,"DynCal.sys"
 
-[Dyncal64_copyfiles]
-dyncal64.sys
-
-[Driver64_copyfiles]
-rfvibra64.dll
-rfvibra264.dll
-rfcplsvr64.dll
-
-[A009.NT]
-CopyFiles = Driver_copyfiles,Dyncal_copyfiles
-AddReg=A009.AddReg,CPLadd.reg,RFVibra1.reg,RFVibra2.reg
-
-[A009.NT.HW]
-;AddReg=Dyncal_addreg
-AddReg=A009.NT.HW.AddReg
-
-[A009.NT.Services]
-;AddService = dyncal,%Dyncal_ASSOCSERVICE%,Dyncal_service
-;AddService = dyncal,,Dyncal_service
-;AddService = dyncal,0x00000800,Dyncal_service
-AddService = dyncal,0x00000002,Dyncal_service
-
-[Dyncal_service]
-DisplayName   = %Dyncal_ServiceDesc%
-ServiceType   = 1   ; SERVICE_KERNEL_DRIVER
-StartType     = 3   ; SERVICE_DEMAND_START
-ErrorControl  = 1   ; SERVICE_ERROR_NORMAL
-ServiceBinary = %12%\dyncal.sys
-
-[A009.NT.HW.AddReg]
-;HKR,,"UpperFilters",0x00010008,"Dyncal"
-HKR,,"Service",,"Dyncal"  
-
-[A009.NTamd64]
-CopyFiles = Driver64_copyfiles,Dyncal64_copyfiles
-AddReg=A009.AddReg,CPLadd64.reg,RFVibra164.reg,RFVibra264.reg
-
-[A009.NTamd64.Services]
-;AddService = dyncal64,%Dyncal_ASSOCSERVICE%,Dyncal64_service
-;AddService = dyncal64,,Dyncal64_service
-;AddService = dyncal64,0x00000001,Dyncal64_service
-AddService = dyncal64,0x00000002,Dyncal64_service
-
-[Dyncal64_service]
-DisplayName   = %Dyncal64_ServiceDesc%
-ServiceType   = 1   ; SERVICE_KERNEL_DRIVER
-StartType     = 3   ; SERVICE_DEMAND_START
-ErrorControl  = 1   ; SERVICE_ERROR_NORMAL
-ServiceBinary = %12%\dyncal64.sys
-
-[A009.NTamd64.HW]
-;AddReg=Dyncal64_addreg
-AddReg=A009.NTamd64.HW.AddReg
-
-[A009.NTamd64.HW.AddReg]
-;HKR,,"UpperFilters",0x00010008,"Dyncal64"  
-HKR,,"Service",,"Dyncal64"  
-
-[CPLadd.reg]
-HKCR,CLSID\%CLSID%\,,,%RFCPLSVRNAME%
-HKCR,CLSID\%CLSID%\ProgID,,,%RFCPLSVRNAME%
-HKCR,CLSID\%CLSID%\InProcHandler32,,,"%11%\gchand.dll"
-HKCR,CLSID\%CLSID%\InProcServer32,,,"%11%\RFCPLSVR.dll"
-HKCR,CLSID\%CLSID%\InProcServer32,ThreadingModel,,"Apartment"
-
-[RFVibra1.reg]
-HKCR,CLSID\%CLSID2%\,,,%RFVibra%
-HKCR,CLSID\%CLSID2%\InProcServer32,,,"%11%\RFVibra2.dll"
-HKCR,CLSID\%CLSID2%\InProcServer32,ThreadingModel,,"Both"
-
-[RFVibra2.reg]
-HKCR,CLSID\%CLSID3%\,,,%RFVibra%
-HKCR,CLSID\%CLSID3%\InProcServer32,,,"%11%\RFVibra2.dll"
-HKCR,CLSID\%CLSID3%\InProcServer32,ThreadingModel,,"Both"
-
-[CPLadd64.reg]
-HKCR,CLSID\%CLSID%\,,,%RFCPLSVRNAME%
-HKCR,CLSID\%CLSID%\ProgID,,,%RFCPLSVRNAME%
-HKCR,CLSID\%CLSID%\InProcHandler32,,,"%11%\gchand.dll"
-HKCR,CLSID\%CLSID%\InProcServer32,,,"%11%\RFCPLSVR64.dll"
-HKCR,CLSID\%CLSID%\InProcServer32,ThreadingModel,,"Apartment"
-
-[RFVibra164.reg]
-HKCR,CLSID\%CLSID2%\,,,%RFVibra%
-HKCR,CLSID\%CLSID2%\InProcServer32,,,"%11%\RFVibra64.dll"
-HKCR,CLSID\%CLSID2%\InProcServer32,ThreadingModel,,"Both"
-
-[RFVibra264.reg]
-HKCR,CLSID\%CLSID3%\,,,%RFVibra%
-HKCR,CLSID\%CLSID3%\InProcServer32,,,"%11%\RFVibra264.dll"
-HKCR,CLSID\%CLSID3%\InProcServer32,ThreadingModel,,"Both"
 
 [A009.AddReg]
-HKLM,%JoystickOEMKey%VID_0583&PID_A009,OEMName,0,%HID\VID_0583&PID_A009.DeviceDesc%U UV 
+HKR,,DevLoader,,"*ntkern,mmdevldr.vxd"
+HKR,,DriverDesc,,%USB\VID_0583&PID_A009.DeviceDesc%
+HKR,,MatchingDeviceId,,HID\VID_0583&PID_A009&REV_0100,HID\VID_0583&PID_A009
+HKR,,NTMPDriver,,"joyhid.vxd"
+HKR,,Driver,,vjoyd.vxd
+HKR,Drivers\joystick\msjstick.drv,Driver,,msjstick.drv
+HKR,Drivers\joystick\msjstick.drv,MiniDriver,,"joyhid.vxd"
+HKR,Drivers\joystick\msjstick.drv,MiniDriverFlags,1,3,0,0,0
+HKR,Drivers,SubClasses,,"joystick"
+HKR,Drivers,MIGRATED,,0
+HKR,Drivers\joystick,,,
+HKR,Drivers\joystick\msjstick.drv,Description,,%USB\VID_0583&PID_A009.DeviceDesc%
+HKLM,%JoystickOEMKey%VID_0583&PID_A009,OEMName,0,%USB\VID_0583&PID_A009.DeviceDesc%
 HKLM,%JoystickOEMKey%VID_0583&PID_A009,ConfigCLSID,0,"%CLSID%"
 HKLM,%JoystickOEMKey%VID_0583&PID_A009,,,
-HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEM,TIDEVICE,0,""
-HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEM,VDEVICE,0,""
-HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEM,TIDEVICE-ALPHA,0,""
-HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEM,VDEVICE-ALPHA,0,""
+HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEM,TIDEVICE,0,"A009-1.bmp"
+HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEM,VDEVICE,0,"A009-2.bmp"
+HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEM,TIDEVICE-ALPHA,0,"A009-1A.bmp"
+HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEM,VDEVICE-ALPHA,0,"A009-2A.bmp"
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEM,FFMode,65537,3,0,0,0
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEM,DefaultGain,65537,14,0,0,0
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEM,OverallGain,65537,14,0,0,0
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEM,SpringGain,65537,0,0,0,0
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEM,MapForce,65537,0,0,0,0
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEM,FFDisable,65537,0,0,0,0
-;HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEM,SecondDPad,65537,20,40,0,0
+;HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEM,SenondDPad,65537,20,40,0,0
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEM,CalibrationMode,65537,1,0,0,0
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEM,CalibrationFlags,65537,1F,0,0,0
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEM,CalibrationData,1,03,03,03,03,03,03,03,03
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEM,DeadZone,65537,3,0,0,0
 ;HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEM,ResetCode,65537,11,0,0,0
-HKLM,%JoystickOEMKey%VID_0583&PID_A009\Axes\0,,,%FF.XAxis.Desc%
-HKLM,%JoystickOEMKey%VID_0583&PID_A009\Axes\0,Attributes,1,01,81,00,00,01,00,30,00
-HKLM,%JoystickOEMKey%VID_0583&PID_A009\Axes\0,FFAttributes,1,0A,00,00,00,00,01,00,00
-HKLM,%JoystickOEMKey%VID_0583&PID_A009\Axes\1,,,%FF.YAxis.Desc%
-HKLM,%JoystickOEMKey%VID_0583&PID_A009\Axes\1,Attributes,1,01,81,00,00,01,00,31,00
-HKLM,%JoystickOEMKey%VID_0583&PID_A009\Axes\1,FFAttributes,1,0A,00,00,00,00,01,00,00
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\Axes\0,,,%FF.XAxis.Desc%
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\Axes\0,Attributes,1,01,81,00,00
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\Axes\0,FFAttributes,1,0A,00,00,00,00,01,00,00
@@ -186,12 +101,12 @@ HKLM,%JoystickOEMKey%VID_0583&PID_A009\Axes\1,FFAttributes,1,0A,00,00,00,00,01,0
 ;HKLM,%JoystickOEMKey%VID_0583&PID_A009\Axes\5,,,%FF.VAxis.Desc%
 ;HKLM,%JoystickOEMKey%VID_0583&PID_A009\Axes\5,Attributes,1,01,81,00,00
 ;HKLM,%JoystickOEMKey%VID_0583&PID_A009\Axes\5,FFAttributes,1,0A,00,00,00,00,01,00,00
-;HKLM,%JoystickOEMKey%VID_0583&PID_A009\Axes\6,,,%FF.ZAxis.Desc%
-;HKLM,%JoystickOEMKey%VID_0583&PID_A009\Axes\6,Attributes,1,01,81,00,00
-;HKLM,%JoystickOEMKey%VID_0583&PID_A009\Axes\6,FFAttributes,1,0A,00,00,00,00,01,00,00
-;HKLM,%JoystickOEMKey%VID_0583&PID_A009\Axes\7,,,%FF.RAxis.Desc%
-;HKLM,%JoystickOEMKey%VID_0583&PID_A009\Axes\7,Attributes,1,01,81,00,00
-;HKLM,%JoystickOEMKey%VID_0583&PID_A009\Axes\7,FFAttributes,1,0A,00,00,00,00,01,00,00
+HKLM,%JoystickOEMKey%VID_0583&PID_A009\Axes\6,,,%FF.ZAxis.Desc%
+HKLM,%JoystickOEMKey%VID_0583&PID_A009\Axes\6,Attributes,1,01,81,00,00
+HKLM,%JoystickOEMKey%VID_0583&PID_A009\Axes\6,FFAttributes,1,0A,00,00,00,00,01,00,00
+HKLM,%JoystickOEMKey%VID_0583&PID_A009\Axes\7,,,%FF.RAxis.Desc%
+HKLM,%JoystickOEMKey%VID_0583&PID_A009\Axes\7,Attributes,1,01,81,00,00
+HKLM,%JoystickOEMKey%VID_0583&PID_A009\Axes\7,FFAttributes,1,0A,00,00,00,00,01,00,00
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\Buttons\0,,,%Button0.Desc%
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\Buttons\0,Attributes,1,02,80,00,00
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\Buttons\1,,,%Button1.Desc%
@@ -226,46 +141,50 @@ HKLM,%JoystickOEMKey%VID_0583&PID_A009\POV\0,,,%POV0.Desc%
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback,Attributes,1,00,00,00,00,E8,03,00,00,E8,03,00,00
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback,CLSID,,"%CLSID3%"
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_ConstantForce%,,,"%ConstantForce.Desc%"
-HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_ConstantForce%,Attributes,1,00,01,00,00,01,00,00,00,ed,01,00,00,cd,01,00,00,10,00,00,00
+HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_ConstantForce%,Attributes,1,00,01,00,00,01,86,00,00,ed,03,00,00,ed,03,00,00,10,00,00,00
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_RampForce%,,,"%RampForce.Desc%"
-HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_RampForce%,Attributes,1,00,02,00,00,02,00,00,00,ef,01,00,00,cf,01,00,00,10,00,00,00
+HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_RampForce%,Attributes,1,00,02,00,00,02,86,00,00,ef,03,00,00,ef,03,00,00,10,00,00,00
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_Square%,,,"%Square.Desc%"
-HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_Square%,Attributes,1,00,03,00,00,03,00,00,00,ef,01,00,00,cf,01,00,00,10,00,00,00
+HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_Square%,Attributes,1,00,03,00,00,03,86,00,00,ef,03,00,00,ef,03,00,00,10,00,00,00
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_Sine%,,,"%Sine.Desc%"
-HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_Sine%,Attributes,1,00,04,00,00,03,00,00,00,ef,01,00,00,cf,01,00,00,10,00,00,00
+HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_Sine%,Attributes,1,00,04,00,00,03,86,00,00,ef,03,00,00,ef,03,00,00,10,00,00,00
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_Triangle%,,,"%Triangle.Desc%"
-HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_Triangle%,Attributes,1,00,05,00,00,03,00,00,00,ef,01,00,00,cf,01,00,00,10,00,00,00
+HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_Triangle%,Attributes,1,00,05,00,00,03,86,00,00,ef,03,00,00,ef,03,00,00,10,00,00,00
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_SawToothUp%,,,"%SawToothUp.Desc%"
-HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_SawToothUp%,Attributes,1,00,06,00,00,03,00,00,00,ef,01,00,00,cf,01,00,00,10,00,00,00
+HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_SawToothUp%,Attributes,1,00,06,00,00,03,86,00,00,ef,03,00,00,ef,03,00,00,10,00,00,00
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_SawToothDown%,,,"%SawToothDown.Desc%"
-HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_SawToothDown%,Attributes,1,00,07,00,00,03,00,00,00,ef,01,00,00,cf,01,00,00,10,00,00,00
+HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_SawToothDown%,Attributes,1,00,07,00,00,03,86,00,00,ef,03,00,00,ef,03,00,00,10,00,00,00
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_Spring%,,,"%Spring.Desc%"
-HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_Spring%,Attributes,1,00,08,00,00,04,00,00,00,29,01,00,00,09,01,00,00,10,00,00,00
+HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_Spring%,Attributes,1,00,08,00,00,04,d8,00,00,6d,03,00,00,6d,03,00,00,10,00,00,00
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_Damper%,,,"%Damper.Desc%"
-HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_Damper%,Attributes,1,00,09,00,00,04,00,00,00,29,01,00,00,09,01,00,00,10,00,00,00
+HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_Damper%,Attributes,1,00,09,00,00,04,d8,00,00,6d,03,00,00,6d,03,00,00,10,00,00,00
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_Inertia%,,,"%Inertia.Desc%"
-HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_Inertia%,Attributes,1,00,0a,00,00,04,00,00,00,29,01,00,00,09,01,00,00,10,00,00,00
+HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_Inertia%,Attributes,1,00,0a,00,00,04,d8,00,00,6d,03,00,00,6d,03,00,00,10,00,00,00
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_Friction%,,,"%Friction.Desc%"
-HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_Friction%,Attributes,1,00,0b,00,00,04,00,00,00,29,01,00,00,09,01,00,00,10,00,00,00
+HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_Friction%,Attributes,1,00,0b,00,00,04,d8,00,00,6d,03,00,00,6d,03,00,00,10,00,00,00
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_CustomForce%,,,"%CustomForce.Desc%"
-HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_CustomForce%,Attributes,1,00,0c,00,00,05,00,00,00,6f,01,00,00,4f,01,00,00,10,00,00,00
+HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_CustomForce%,Attributes,1,00,0c,00,00,05,86,00,00,ef,03,00,00,ef,03,00,00,10,00,00,00
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_CPLForce%,,,"%CPLForce.Desc%"
 HKLM,%JoystickOEMKey%VID_0583&PID_A009\OEMForceFeedback\Effects\%GUID_CPLForce%,Attributes,1,00,0d,00,00,01,00,00,00,ed,01,00,00,cd,01,00,00,10,00,00,00
 
-;[Dyncal_inst]
-;CopyFiles = Dyncal_copyfiles
-;AddReg = Dyncal_addreg
+[RF_USBJSTICK.CopyFiles]
+joyhid.vxd
 
-;[Dyncal_addreg]
-;HKR,,"LowerFilters",0x00010000,"Dyncal" 
-;HKR,,"UpperFilters",0x00010000,"Dyncal"
+[RF_USBJSTICK.KnownFiles]
+joyhid.vxd=safe
 
-;[Dyncal64_addreg]
-;HKR,,"LowerFilters",0x00010000,"Dyncal64" 
-;HKR,,"UpperFilters",0x00010000,"Dyncal64"  
+[RF_USBJSTICK.DelFiles]
 
-;[Dyncal_inst.Services]
-;AddService = dyncal,,Dyncal_service
+[MSJSTICK.CopyList]
+vjoyd.vxd,,
+msjstick.drv,,
+
+[MSJSTICK.KnownFiles]
+vjoyd.vxd=safe
+msjstick.drv=safe
+
+[MSJSTICK.UpdateInis]
+system.ini,drivers,"joystick="
 
 [Strings]
 Rockfire.Mfg                     = "Rockfire"
@@ -297,11 +216,11 @@ Button14.Desc			 = "Button 15"
 POV0.Desc			 = "Hat Switch"
 ConstantForce.Desc               = "Constant Force"
 RampForce.Desc                   = "Ramp Force"
-Square.Desc                      = "Square"
-Sine.Desc                        = "Sine"
-Triangle.Desc                    = "Triangle"
-SawToothUp.Desc                  = "SawToothUp"
-SawToothDown.Desc                = "SawToothDown"
+Square.Desc                      = "Square Wave"
+Sine.Desc                        = "Sine Wave"
+Triangle.Desc                    = "Triangle Wave"
+SawToothUp.Desc                  = "SawToothUp Wave"
+SawToothDown.Desc                = "SawToothDown Wave"
 Spring.Desc                      = "Spring"
 Damper.Desc                      = "Damper"
 Inertia.Desc                     = "Inertia"
@@ -313,12 +232,7 @@ RFVibra			         = "Game Controllers Vibration Driver"
 RFCPLSVRNAME			 = "GameDevice Controlpanel Extender"
 RFVibraNAME1			 = "GameDevice Vibration Driver 1"
 RFVibraNAME2			 = "GameDevice Vibration Driver 2"
-
 Dyncal_ServiceDesc		 = "Dynamic Calibration Driver"
-
-Dyncal64_ServiceDesc		 = "Dynamic64 Calibration Driver"
-
-Dyncal_ASSOCSERVICE		 = 0x00000002
 
 Disk_Desc			 = "GameDeviceDrivers V4.X Install Disk"
 
@@ -344,5 +258,5 @@ JoystickOEMKey                   = "System\CurrentControlSet\Control\MediaProper
 
 
 
-HID\VID_0583&PID_A009.DeviceDesc = "4Axis 12Button USB Vibration GamePad"
+USB\VID_0583&PID_A009.DeviceDesc = "4Axis 12Button USB Vibration GamePad"
 
